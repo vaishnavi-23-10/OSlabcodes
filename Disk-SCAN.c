@@ -1,119 +1,73 @@
-code
+#include <stdio.h>
+#include <stdlib.h>
 
+int main() {
+    int queue[20], head, n, i, total_movement = 0;
 
+    printf("Enter the number of requests: ");
+    scanf("%d", &n);
 
-#include<stdio.h> #include<stdlib.h> #include<math.h> int main(){
-int RequestQueue[15],n,i,j,k,initial,temp,max,tracks,disklocation,TotalHeadmovement; int direction;
-printf("Enter the Number of tracks:");
+    printf("Enter the request queue:\n");
+    for(i = 0; i < n; i++) {
+        scanf("%d", &queue[i]);
+    }
 
-scanf("%d",&tracks);
+    printf("Enter the initial head position: ");
+    scanf("%d", &head);
 
-printf("Enter total number of Requests:"); scanf("%d",&n);
-printf("Enter the request Queue:");
+    int direction;
+    printf("Enter the direction (0 for left, 1 for right): ");
+    scanf("%d", &direction);
 
-for(i=0;i<n;i++){
+    int max_track = 200;
 
-scanf("%d",&RequestQueue[i]); max=RequestQueue[i];
-}
+    for(i = 0; i < n-1; i++) {
+        for(int j = i+1; j < n; j++) {
+            if(queue[i] > queue[j]) {
+                int temp = queue[i];
+                queue[i] = queue[j];
+                queue[j] = temp;
+            }
+        }
+    }
 
+    int index;
+    for(i = 0; i < n; i++) {
+        if(queue[i] >= head) {
+            index = i;
+            break;
+        }
+    }
 
+    if(direction == 0) {
+        for(i = index-1; i >= 0; i--) {
+            printf("Head movement from %d to %d\n", head, queue[i]);
+            total_movement += abs(head - queue[i]);
+            head = queue[i];
+        }
+        total_movement += head; // Move to track 0
+        head = 0;
+        for(i = index; i < n; i++) {
+            printf("Head movement from %d to %d\n", head, queue[i]);
+            total_movement += abs(head - queue[i]);
+            head = queue[i];
+        }
+    } else {
+        for(i = index; i < n; i++) {
+            printf("Head movement from %d to %d\n", head, queue[i]);
+            total_movement += abs(head - queue[i]);
+            head = queue[i];
+        }
+        total_movement += max_track - head; // Move to the last track
+        head = max_track;
+        for(i = index-1; i >= 0; i--) {
+            printf("Head movement from %d to %d\n", head, queue[i]);
+            total_movement += abs(head - queue[i]);
+            head = queue[i];
+        }
+    }
 
-int first=RequestQueue[0];
+    printf("Total head movement: %d\n", total_movement);
 
-printf("Enter the initial position of Head:"); scanf("%d",&initial);
-printf("Enter the direction:Choose 1-Left or Choose 2-Right:");
-
-scanf("%d",&direction);
-
-
-
-RequestQueue[n]=initial; n=n+1;
-
-
-for(i=0;i<n;i++){ for(j=i;j<n;j++){
-if(RequestQueue[i]>RequestQueue[j]){
-
-temp=RequestQueue[i]; RequestQueue[i]=RequestQueue[j];  RequestQueue[j]=temp;
-}
-
-}
-
-}
-
-
-
-
-
-for(i=0;i<n;i++){
-
-if(initial==RequestQueue[i]){ disklocation=i;
-break;
-
-}
-
-}
-
-switch(direction){ case 1:
-{
-
-for(j=disklocation;j>=0;j--){
-
-printf("%d-->",RequestQueue[j]);
-
-}
-
-printf("0-->");
-
-for(k=disklocation+1;k<n;k++){
-
-printf("%d-->",RequestQueue[k]);
-
-}
-
-TotalHeadmovement= (initial)+max;
-
-printf("\nTotal Head Movement is:%d",TotalHeadmovement);
-
-}
-
-break;
-
-
-
-case 2:
-
-{
-
-for(j=disklocation;j<n;j++){
-
-printf("%d-->",RequestQueue[j]);
-
-}
-
-printf("%d-->",tracks-1);
-
-for(k=disklocation-1;k>=0;k--){
-
-printf("%d-->",RequestQueue[k]);
-
-}
-
-TotalHeadmovement= (tracks-1-initial)+(tracks-1-RequestQueue[0]); printf("\nTotal Head Movement is:%d",TotalHeadmovement);
-}
-
-break;
-
-
-
-default:
-
-printf("Enter Valid choice!!!!"); break;
-
-
-}
-
-
-
-return 0;
-
+    return 0;
 }
